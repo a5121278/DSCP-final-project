@@ -4,7 +4,6 @@ import pip
 pip.main(['install', 'pandas'])
 pip.main(['install', 'matplotlib'])
 
-import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.pyplot import MultipleLocator
@@ -12,23 +11,25 @@ from matplotlib.pyplot import MultipleLocator
 
 if __name__ == '__main__':
     dist = "YOUTUBE CHANNELS DATASET.csv"
-    Subscribers_converter = lambda x: (x.replace('M', ''))
+    def Subscribers_converter(x: str):
+        x = x.replace('M', '')
+        if x == '':
+            return None
+        else:
+            return float(x)
     df = pd.read_csv( dist, converters={'Subscribers': Subscribers_converter})
-    for ele in df.Subscribers:
-        if ele == '':
-            ele = 0.0
-        ele = float(ele)
     length = len(df.Subscribers)
-    index = range(length)
     # Data Visualization
-    plt.plot(index, df.Subscribers)
-    plt.xlim(0, length)
-    plt.title(" Youtube top 500 channels ")
+    plt.plot(df.index, df.Subscribers)
+    plt.xlim(length + 1, -1)
+    plt.title(" Youtube top 100 channels ")
 
-    y_major_locator = MultipleLocator(10)
+
     ax = plt.gca()
+    y_major_locator = MultipleLocator(20)
     ax.yaxis.set_major_locator(y_major_locator)
+    plt.ylim(df.Subscribers[ length - 2]-20, df.Subscribers[0])
 
     plt.xlabel(r" Ranking")
-    plt.ylabel(r" Subscribers ")
+    plt.ylabel(r" Subscribers (in millions)")
     plt.show()
